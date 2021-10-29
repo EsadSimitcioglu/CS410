@@ -3,7 +3,6 @@ import java.util.List;
 
 public class State {
 
-    boolean isFinished;
     String stateName;
     List<StateProps> transactions;
 
