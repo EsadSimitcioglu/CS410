@@ -24,16 +24,11 @@ public class Stack {
     }
 
     public boolean pop(char pop){
-
-
         if(pop == 'ε')
             return true;
-
         if(stack.size() == 0 || stack.get(stack.size()-1) != pop )
             return false;
-
         stack.remove(stack.size()-1);
-
         return true;
 
     }

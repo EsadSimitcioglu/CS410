@@ -1,3 +1,4 @@
+import Homework2.Path;
 import Homework2.Stack;
 import Homework2.StateStack;
 import Homework2.StateStackProps;
@@ -74,7 +75,7 @@ public class main {
         List<StateStack> states = new ArrayList<>();
 
         List<String> stackVariable = new ArrayList<>();
-        String startVariable;
+        String initialStackSymbol;
 
         List<String> inputs = new ArrayList<>();
 
@@ -96,11 +97,11 @@ public class main {
 
             goalStateNames = Arrays.asList(myReader.nextLine().split(" "));
             stackVariable = Arrays.asList(myReader.nextLine().split(" "));
-            startVariable = myReader.nextLine();
+            initialStackSymbol = myReader.nextLine();
             inputs = Arrays.asList(myReader.nextLine().split(" "));
 
 
-            Stack stack = new Stack(stackNumber,startVariable);
+            Stack stack = new Stack(stackNumber,initialStackSymbol);
 
             while(myReader.hasNextLine()){
                 String line = myReader.nextLine();
@@ -112,39 +113,28 @@ public class main {
                     }
                 }
                 else {
-                    System.out.println(transactions[0]);
                     StateStack iterate = states.get(stateNames.indexOf(startState));
-                    myWriter.write(iterate.stateName + "  ");
+                    Path path = new Path(iterate,stack,initialStackSymbol);
+
+                    path.startAndEndTransaction();
+
                     for (var i = 0; i < line.length(); i++) {
-                        for (StateStackProps transaction : iterate.transactions) {
-
-                            System.out.print(iterate.stateName + " " + stack.stack + " ");
-
-                            if (transaction.variable == 'ε' && stack.pop(transaction.pop)) {
-                                System.out.println(1);
-                                stack.push(transaction.push);
-                                iterate = transaction.nextState;
-                                myWriter.write(iterate.stateName + "  ");
-                            }
-                            if(transaction.variable == line.charAt(i) && stack.pop(transaction.pop)){
-                                System.out.println(2);
-                                stack.push(transaction.push);
-                                iterate = transaction.nextState;
-                                myWriter.write(iterate.stateName + "  ");
-                            }
-                        }
-
+                        path.findTransaction(line.charAt(i));
                     }
+
+                    if(path.isValid)
+                        path.startAndEndTransaction();
+
+                    for(String stop : path.road)
+                        myWriter.write(stop + " ");
+
                     myWriter.write("\n");
-                    if (goalStateNames.contains(iterate.stateName))
+                    if (goalStateNames.contains(path.iterate.stateName))
                         myWriter.write("Accepted\n");
                     else
                         myWriter.write("Rejected\n");
                 }
             }
-
-
-
 
             for(StateStack state : states){
                 System.out.println(state.stateName + " ");
@@ -155,12 +145,15 @@ public class main {
 
             myWriter.close();
             myReader.close();
+
+
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
 
 
 
