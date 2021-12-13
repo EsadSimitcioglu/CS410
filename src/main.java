@@ -78,6 +78,7 @@ public class main {
         String initialStackSymbol;
 
         List<String> inputs = new ArrayList<>();
+        List<Path> paths = new ArrayList<>();
 
         try {
             File myObj = new File("input.txt");
@@ -101,7 +102,7 @@ public class main {
             inputs = Arrays.asList(myReader.nextLine().split(" "));
 
 
-            Stack stack = new Stack(stackNumber,initialStackSymbol);
+
 
             while(myReader.hasNextLine()){
                 String line = myReader.nextLine();
@@ -114,26 +115,29 @@ public class main {
                 }
                 else {
                     StateStack iterate = states.get(stateNames.indexOf(startState));
-                    Path path = new Path(iterate,stack,initialStackSymbol);
+                    Stack stack = new Stack(stackNumber,initialStackSymbol);
+                    paths.add(new Path(iterate,stack,initialStackSymbol));
+                    paths.get(paths.size()-1).findPath(line);
 
-                    path.startAndEndTransaction();
+                    Path p = paths.get(paths.size()-1);
 
-                    for (var i = 0; i < line.length(); i++) {
-                        path.findTransaction(line.charAt(i));
+                    for(String stop : p.road) {
+                        myWriter.write(stop + " ");
+                        if(p.differentPaths.size() > 0){
+                            for(Path innerPath : p.differentPaths)
+                                for(String innerStop : innerPath.road)
+                                    myWriter.write(stop + " ");
+                        }
                     }
 
-                    if(path.isValid)
-                        path.startAndEndTransaction();
-
-                    for(String stop : path.road)
-                        myWriter.write(stop + " ");
-
                     myWriter.write("\n");
-                    if (goalStateNames.contains(path.iterate.stateName))
+
+                    if (goalStateNames.contains(p.iterate.stateName))
                         myWriter.write("Accepted\n");
                     else
                         myWriter.write("Rejected\n");
                 }
+
             }
 
             for(StateStack state : states){
@@ -161,6 +165,8 @@ public class main {
     public static void main (String args[]) {
 
         Homework2();
+
+
 
 
     }
