@@ -73,10 +73,8 @@ public class main {
         String startState;
         List<String> goalStateNames;
         List<StateStack> states = new ArrayList<>();
-
         List<String> stackVariable = new ArrayList<>();
         String initialStackSymbol;
-
         List<String> inputs = new ArrayList<>();
         List<Path> paths = new ArrayList<>();
 
@@ -95,14 +93,10 @@ public class main {
 
             startState = myReader.nextLine();
 
-
             goalStateNames = Arrays.asList(myReader.nextLine().split(" "));
             stackVariable = Arrays.asList(myReader.nextLine().split(" "));
             initialStackSymbol = myReader.nextLine();
             inputs = Arrays.asList(myReader.nextLine().split(" "));
-
-
-
 
             while(myReader.hasNextLine()){
                 String line = myReader.nextLine();
@@ -119,20 +113,17 @@ public class main {
                     paths.add(new Path(iterate,stack,initialStackSymbol));
                     paths.get(paths.size()-1).findPath(line);
 
-                    Path p = paths.get(paths.size()-1);
+                    Path path = paths.get(paths.size()-1);
 
-                    for(String stop : p.road) {
+                    for(String stop : path.road) {
                         myWriter.write(stop + " ");
-                        if(p.differentPaths.size() > 0){
-                            for(Path innerPath : p.differentPaths)
-                                for(String innerStop : innerPath.road)
-                                    myWriter.write(stop + " ");
-                        }
                     }
+
+                    possbilePaths(path,myWriter);
 
                     myWriter.write("\n");
 
-                    if (goalStateNames.contains(p.iterate.stateName))
+                    if (goalStateNames.contains(path.iterate.stateName))
                         myWriter.write("Accepted\n");
                     else
                         myWriter.write("Rejected\n");
@@ -146,10 +137,8 @@ public class main {
                     System.out.println(props);
             }
 
-
             myWriter.close();
             myReader.close();
-
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -158,16 +147,27 @@ public class main {
         }
     }
 
+    public static void possbilePaths(Path p, FileWriter myWriter) {
+
+        try{
+            if(p.differentPaths.size() > 0){
+                for(Path innerPath : p.differentPaths) {
+                    for (String innerStop : innerPath.road)
+                        myWriter.write(innerStop);
+                    possbilePaths(innerPath, myWriter);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
 
+    }
 
 
     public static void main (String args[]) {
 
         Homework2();
-
-
-
 
     }
 }
