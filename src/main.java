@@ -119,14 +119,19 @@ public class main {
                         myWriter.write(stop + " ");
                     }
 
-                    possbilePaths(path,myWriter);
-
                     myWriter.write("\n");
 
                     if (goalStateNames.contains(path.iterate.stateName))
                         myWriter.write("Accepted\n");
                     else
                         myWriter.write("Rejected\n");
+
+                    myWriter.write("Possible Paths : \n");
+                    possbilePaths(path,myWriter,goalStateNames);
+
+                    myWriter.write("\n");
+
+
                 }
 
             }
@@ -147,27 +152,28 @@ public class main {
         }
     }
 
-    public static void possbilePaths(Path p, FileWriter myWriter) {
+    public static void possbilePaths(Path p, FileWriter myWriter,List<String> goalStateNames) {
 
         try{
-            if(p.differentPaths.size() > 0){
-                for(Path innerPath : p.differentPaths) {
-                    for (String innerStop : innerPath.road)
-                        myWriter.write(innerStop);
-                    possbilePaths(innerPath, myWriter);
+            if(p.innerPath != null){
+                myWriter.write("\n");
+                for (String innerStop : p.innerPath.road)
+                    myWriter.write(innerStop + " ");
+                    myWriter.write("\n");
+                    if (goalStateNames.contains(p.innerPath.iterate.stateName))
+                        myWriter.write("Accepted\n");
+                    else
+                        myWriter.write("Rejected\n");
+
+                    possbilePaths(p.innerPath, myWriter,goalStateNames);
                 }
-            }
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
     }
 
 
     public static void main (String args[]) {
-
         Homework2();
-
     }
 }

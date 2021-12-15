@@ -12,14 +12,13 @@ public class Path {
     public boolean isValid = false;
     public int counter = 0;
 
-    public List<Path> differentPaths;
+    public Path innerPath;
 
     public Path(StateStack iterate, Stack stack,String initialStackSymbol) {
         this.iterate = iterate;
         this.stack = stack;
         this.initialStackSymbol = initialStackSymbol.charAt(0);
         road = new ArrayList<>();
-        differentPaths = new ArrayList<>();
         road.add(iterate.stateName);
     }
 
@@ -27,27 +26,35 @@ public class Path {
 
         startAndEndTransaction();
         findTransaction(input);
-        if(isValid)
+        if(this.isValid)
             startAndEndTransaction();
     }
 
     public void findTransaction(String input) {
         for (var i = 0; i < input.length(); i++) {
             counter = 0;
-            isValid = false;
-            for (StateStackProps transaction : iterate.transactions) {
-                if ((input.charAt(i) == transaction.variable || transaction.variable == 'ε') && (transaction.pop != initialStackSymbol && stack.pop(transaction.pop))) {
-                    stack.push(transaction.push);
-                    iterate = transaction.nextState;
-                    road.add(iterate.stateName);
-                    isValid = true;
-                    counter++;
+            this.isValid = false;
 
-                    if (counter == 2) {
-                        differentPaths.add(new Path(iterate, stack, Character.toString(initialStackSymbol)));
-                        differentPaths.get(differentPaths.size() - 1).findPath(input.substring(i+1));
-                        counter = 0;
+            Stack prevStack;
+
+            for (StateStackProps transaction : this.iterate.transactions) {
+                prevStack = stack;
+                if ((input.charAt(i) == transaction.variable || transaction.variable == 'ε') && (transaction.pop != this.initialStackSymbol && this.stack.pop(transaction.pop))) {
+                    counter++;
+                    if (counter >= 2) {
+                        this.innerPath = new Path(iterate, prevStack, Character.toString(initialStackSymbol));
+                        this.innerPath.road.remove(0);
+                        this.innerPath.road.addAll(road.subList(0,road.size()-1));
+                        this.innerPath.road.add(transaction.nextState.stateName);
+                        this.innerPath.findPath(input.substring(i+1));
+                        continue;
                     }
+
+                    this.stack.push(transaction.push);
+                    this.iterate = transaction.nextState;
+                    this.road.add(this.iterate.stateName);
+                    this.isValid = true;
+
                 }
             }
         }
@@ -62,6 +69,10 @@ public class Path {
                 road.add(iterate.stateName);
             }
         }
+    }
+
+    public void setRoad(List<String> road) {
+        this.road = road;
     }
 
     @Override

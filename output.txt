@@ -1,4 +1,7 @@
-q1 q2 q2 q2 q3 q3 q4 
-Accepted
+q1 q2 q2 q2 
+Rejected
+Possible Paths : 
+
 q1 q2 q2 q3 
 Rejected
+
