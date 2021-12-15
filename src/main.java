@@ -139,6 +139,9 @@ public class main {
                 }
             }
 
+
+            System.out.println("**********************************************");
+
             for(StateStack state : states){
                 System.out.println(state.stateName + " ");
                 for(StateStackProps props : state.transactions)
