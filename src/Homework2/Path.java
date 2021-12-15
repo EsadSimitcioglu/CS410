@@ -10,7 +10,6 @@ public class Path {
     public List<String> road;
     public char initialStackSymbol;
     public boolean isValid = false;
-    public int counter = 0;
 
     public Path innerPath;
 
@@ -23,7 +22,6 @@ public class Path {
     }
 
     public void findPath(String input){
-
         startAndEndTransaction();
         findTransaction(input);
         if(this.isValid)
@@ -32,16 +30,24 @@ public class Path {
 
     public void findTransaction(String input) {
         for (var i = 0; i < input.length(); i++) {
-            counter = 0;
+            int variable_counter = 0;
+            int epsilon_counter = 0;
+            boolean isProcess = false;
             this.isValid = false;
             Stack prevStack = new Stack(stack.initialVariable);
             prevStack.stack.addAll(stack.stack);
 
             for (StateStackProps transaction : this.iterate.transactions) {
                 if ((input.charAt(i) == transaction.variable || transaction.variable == 'ε') ) {
-                    System.out.println(counter   +  " | " + transaction + " | " + input.charAt(i));
-                    counter++;
-                    if (counter >= 2) {
+                    isProcess = true;
+                    System.out.println(input.charAt(i) + " | " + transaction);
+
+                    if(input.charAt(i) == transaction.variable)
+                        variable_counter++;
+                    else
+                        epsilon_counter++;
+
+                    if (variable_counter >= 2 || epsilon_counter >= 2) {
                         this.innerPath = new Path(iterate, prevStack, Character.toString(initialStackSymbol));
                         this.innerPath.road.remove(0);
                         this.innerPath.road.addAll(road.subList(0,road.size()-1));
@@ -49,7 +55,6 @@ public class Path {
                             this.innerPath.road.add(transaction.nextState.stateName);
                             this.innerPath.findPath(input.substring(i+1));
                         }
-
                     }
                     else if((transaction.pop != this.initialStackSymbol && this.stack.pop(transaction.pop))){
                         this.stack.push(transaction.push);
@@ -57,25 +62,21 @@ public class Path {
                         this.road.add(this.iterate.stateName);
                         this.isValid = true;
                     }
-
                 }
+                if(!isProcess)
+                    return;
             }
         }
     }
 
     public void startAndEndTransaction() {
         for (StateStackProps transaction : iterate.transactions) {
-            if (transaction.variable == 'ε' &&  (transaction.pop == initialStackSymbol || transaction.push == initialStackSymbol)) {
-                stack.pop(transaction.pop);
+            if (transaction.variable == 'ε' &&  (transaction.pop == initialStackSymbol || transaction.push == initialStackSymbol) && this.stack.pop(transaction.pop)) {
                 stack.push(transaction.push);
                 iterate = transaction.nextState;
                 road.add(iterate.stateName);
             }
         }
-    }
-
-    public void setRoad(List<String> road) {
-        this.road = road;
     }
 
     @Override
@@ -86,7 +87,6 @@ public class Path {
                 ", road=" + road +
                 ", initialStackSymbol=" + initialStackSymbol +
                 ", isValid=" + isValid +
-                ", counter=" + counter +
                 '}';
     }
 }

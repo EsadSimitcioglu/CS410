@@ -137,7 +137,6 @@ public class main {
 
 
                 }
-
             }
 
             for(StateStack state : states){
@@ -149,15 +148,12 @@ public class main {
             myWriter.close();
             myReader.close();
 
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     public static void possbilePaths(Path p, FileWriter myWriter,List<String> goalStateNames) {
-
         try{
             if(p.innerPath != null){
                 myWriter.write("\n");
