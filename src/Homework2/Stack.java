@@ -6,14 +6,14 @@ import java.util.List;
 public class Stack {
 
     public String[] variables;
-    public List<Character> stack;
+    public List<Character> stack = new ArrayList<Character>();
     public String initialVariable;
 
-    public Stack(int variableSize, String initialVariable) {
-        this.variables = new String[variableSize];
+    public Stack(String initialVariable) {
         this.initialVariable = initialVariable;
-        this.stack = new ArrayList<Character>();
     }
+
+    public Stack() {}
 
     public void push(char variable){
 
@@ -33,5 +33,7 @@ public class Stack {
 
     }
 
-
+    public void setStack(List<Character> stack) {
+        this.stack = stack;
+    }
 }

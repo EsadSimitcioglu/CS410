@@ -1,7 +1,12 @@
-q1 q2 q2 q2 
-Rejected
-Possible Paths : 
+New Input
+q1	q2	q2	q2	(Rejected)
 
-q1 q2 q2 q3 
-Rejected
+Possible Paths : 
+	q1 	q2 	q2 	q3 (Rejected)
+
+New Input
+q1	q2	q2	(Rejected)
+
+Possible Paths : 
+	q1 	q2 (Rejected)
 

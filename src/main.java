@@ -108,25 +108,29 @@ public class main {
                     }
                 }
                 else {
+
+                    myWriter.write("New Input\n");
+
                     StateStack iterate = states.get(stateNames.indexOf(startState));
-                    Stack stack = new Stack(stackNumber,initialStackSymbol);
+                    Stack stack = new Stack(initialStackSymbol);
                     paths.add(new Path(iterate,stack,initialStackSymbol));
                     paths.get(paths.size()-1).findPath(line);
 
                     Path path = paths.get(paths.size()-1);
 
                     for(String stop : path.road) {
-                        myWriter.write(stop + " ");
+                        myWriter.write(stop + "\t");
                     }
+
+
+                    if (goalStateNames.contains(path.iterate.stateName))
+                        myWriter.write("(Accepted)\n");
+                    else
+                        myWriter.write("(Rejected)\n");
 
                     myWriter.write("\n");
 
-                    if (goalStateNames.contains(path.iterate.stateName))
-                        myWriter.write("Accepted\n");
-                    else
-                        myWriter.write("Rejected\n");
-
-                    myWriter.write("Possible Paths : \n");
+                    myWriter.write("Possible Paths : ");
                     possbilePaths(path,myWriter,goalStateNames);
 
                     myWriter.write("\n");
@@ -158,12 +162,11 @@ public class main {
             if(p.innerPath != null){
                 myWriter.write("\n");
                 for (String innerStop : p.innerPath.road)
-                    myWriter.write(innerStop + " ");
-                    myWriter.write("\n");
+                    myWriter.write("\t" + innerStop + " ");
                     if (goalStateNames.contains(p.innerPath.iterate.stateName))
-                        myWriter.write("Accepted\n");
+                        myWriter.write("(Accepted)\n");
                     else
-                        myWriter.write("Rejected\n");
+                        myWriter.write("(Rejected)\n");
 
                     possbilePaths(p.innerPath, myWriter,goalStateNames);
                 }

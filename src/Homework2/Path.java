@@ -34,26 +34,29 @@ public class Path {
         for (var i = 0; i < input.length(); i++) {
             counter = 0;
             this.isValid = false;
-
-            Stack prevStack;
+            Stack prevStack = new Stack(stack.initialVariable);
+            prevStack.stack.addAll(stack.stack);
 
             for (StateStackProps transaction : this.iterate.transactions) {
-                prevStack = stack;
-                if ((input.charAt(i) == transaction.variable || transaction.variable == 'ε') && (transaction.pop != this.initialStackSymbol && this.stack.pop(transaction.pop))) {
+                if ((input.charAt(i) == transaction.variable || transaction.variable == 'ε') ) {
+                    System.out.println(counter   +  " | " + transaction + " | " + input.charAt(i));
                     counter++;
                     if (counter >= 2) {
                         this.innerPath = new Path(iterate, prevStack, Character.toString(initialStackSymbol));
                         this.innerPath.road.remove(0);
                         this.innerPath.road.addAll(road.subList(0,road.size()-1));
-                        this.innerPath.road.add(transaction.nextState.stateName);
-                        this.innerPath.findPath(input.substring(i+1));
-                        continue;
-                    }
+                        if((transaction.pop != innerPath.initialStackSymbol && innerPath.stack.pop(transaction.pop))){
+                            this.innerPath.road.add(transaction.nextState.stateName);
+                            this.innerPath.findPath(input.substring(i+1));
+                        }
 
-                    this.stack.push(transaction.push);
-                    this.iterate = transaction.nextState;
-                    this.road.add(this.iterate.stateName);
-                    this.isValid = true;
+                    }
+                    else if((transaction.pop != this.initialStackSymbol && this.stack.pop(transaction.pop))){
+                        this.stack.push(transaction.push);
+                        this.iterate = transaction.nextState;
+                        this.road.add(this.iterate.stateName);
+                        this.isValid = true;
+                    }
 
                 }
             }
