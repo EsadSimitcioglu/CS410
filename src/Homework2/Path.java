@@ -1,5 +1,6 @@
 package Homework2;
 
+import javax.sound.midi.Soundbank;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,16 +38,10 @@ public class Path {
             Stack prevStack = new Stack(stack.initialVariable);
             prevStack.stack.addAll(stack.stack);
 
-            System.out.println(iterate.stateName);
-            System.out.println(iterate.transactions);
-
             for (StateStackProps transaction : this.iterate.transactions) {
                 System.out.println(input.charAt(i) + " | " + transaction);
                 if ((input.charAt(i) == transaction.variable || transaction.variable == 'ε') ) {
                     isProcess = true;
-
-                    System.out.println(input.charAt(i) + " | " + transaction);
-
 
                     if(input.charAt(i) == transaction.variable)
                         variable_counter++;
@@ -62,10 +57,18 @@ public class Path {
                             this.innerPath.findPath(input.substring(i+1));
                         }
                     }
-                    else if(transaction.variable == 'ε' && transaction.pop == 'ε' && transaction.push == 'ε'){
+                    else if (transaction.variable == 'ε' && transaction.pop == 'ε' && transaction.push == 'ε' && iterate.equals(transaction.nextState))
+                    {
+                        this.iterate.transactions.remove(transaction);
+                        this.findTransaction(input);
+                    }
+                    else if(transaction.variable == 'ε' && transaction.pop == 'ε' && transaction.push == 'ε' && !iterate.equals(transaction.nextState)){
+                        stack.push(transaction.push);
+                        stack.pop(transaction.pop);
                         this.iterate = transaction.nextState;
                         this.road.add(this.iterate.stateName);
                         this.isValid = true;
+                        this.findTransaction(input);
                     }
                     else if((transaction.pop != this.initialStackSymbol && this.stack.pop(transaction.pop))){
                         this.stack.push(transaction.push);

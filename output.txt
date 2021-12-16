@@ -1,4 +1,0 @@
-New Input
-q1	q2	(Rejected)
-
-Possible Paths : 
