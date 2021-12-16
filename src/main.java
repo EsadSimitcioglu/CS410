@@ -122,8 +122,7 @@ public class main {
                         myWriter.write(stop + "\t");
                     }
 
-
-                    if (goalStateNames.contains(path.iterate.stateName))
+                    if (goalStateNames.contains(path.iterate.stateName) && path.isValid)
                         myWriter.write("(Accepted)\n");
                     else
                         myWriter.write("(Rejected)\n");

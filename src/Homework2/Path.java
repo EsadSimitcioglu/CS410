@@ -39,7 +39,6 @@ public class Path {
             prevStack.stack.addAll(stack.stack);
 
             for (StateStackProps transaction : this.iterate.transactions) {
-                System.out.println(input.charAt(i) + " | " + transaction);
                 if ((input.charAt(i) == transaction.variable || transaction.variable == 'ε') ) {
                     isProcess = true;
 
@@ -58,7 +57,7 @@ public class Path {
                         }
                     }
                     else if (transaction.variable == 'ε' && transaction.pop == 'ε' && transaction.push == 'ε' && iterate.equals(transaction.nextState))
-                    {
+                     {
                         this.iterate.transactions.remove(transaction);
                         this.findTransaction(input);
                     }
@@ -80,12 +79,11 @@ public class Path {
                 }
             }
             if(!isProcess) {
+                isValid = false;
                 return;
             }
         }
     }
-
-
     public void startAndEndTransaction() {
         for (StateStackProps transaction : iterate.transactions) {
             if (transaction.variable == 'ε' &&  (transaction.pop == initialStackSymbol || transaction.push == initialStackSymbol) && this.stack.pop(transaction.pop)) {
