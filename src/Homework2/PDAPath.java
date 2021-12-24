@@ -3,17 +3,17 @@ package Homework2;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Path {
+public class PDAPath {
 
-    public StateStack iterate;
+    public PDAState iterate;
     public Stack stack;
     public List<String> road;
     public char initialStackSymbol;
     public boolean isValid = false;
 
-    public Path innerPath;
+    public PDAPath innerPath;
 
-    public Path(StateStack iterate, Stack stack,String initialStackSymbol) {
+    public PDAPath(PDAState iterate, Stack stack, String initialStackSymbol) {
         this.iterate = iterate;
         this.stack = stack;
         this.initialStackSymbol = initialStackSymbol.charAt(0);
@@ -40,7 +40,7 @@ public class Path {
             System.out.println(iterate.stateName);
             System.out.println(iterate.transactions);
 
-            for (StateStackProps transaction : this.iterate.transactions) {
+            for (PDAStateProps transaction : this.iterate.transactions) {
                 System.out.println(input.charAt(i) + " | " + transaction);
                 if ((input.charAt(i) == transaction.variable || transaction.variable == 'ε') ) {
                     isProcess = true;
@@ -54,7 +54,7 @@ public class Path {
                         epsilon_counter++;
 
                     if (variable_counter >= 2 || epsilon_counter >= 2) {
-                        this.innerPath = new Path(iterate, prevStack, Character.toString(initialStackSymbol));
+                        this.innerPath = new PDAPath(iterate, prevStack, Character.toString(initialStackSymbol));
                         this.innerPath.road.remove(0);
                         this.innerPath.road.addAll(road.subList(0,road.size()-1));
                         if((transaction.pop != innerPath.initialStackSymbol && innerPath.stack.pop(transaction.pop))){
@@ -84,7 +84,7 @@ public class Path {
 
 
     public void startAndEndTransaction() {
-        for (StateStackProps transaction : iterate.transactions) {
+        for (PDAStateProps transaction : iterate.transactions) {
             if (transaction.variable == 'ε' &&  (transaction.pop == initialStackSymbol || transaction.push == initialStackSymbol) && this.stack.pop(transaction.pop)) {
                 stack.push(transaction.push);
                 iterate = transaction.nextState;
@@ -95,7 +95,7 @@ public class Path {
 
     @Override
     public String toString() {
-        return "Path{" +
+        return "PDAPath{" +
                 "iterate=" + iterate +
                 ", stack=" + stack +
                 ", road=" + road +
