@@ -2,6 +2,9 @@ import Homework2.Path;
 import Homework2.Stack;
 import Homework2.StateStack;
 import Homework2.StateStackProps;
+import Homework3.Controller;
+import Homework3.TuringState;
+import Homework3.TuringStateProps;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -170,8 +173,91 @@ public class main {
         }
     }
 
+    public static void Homework3(){
+        int stateNumber;
+        int variableNumber;
+        int numberOfGoalStates;
+        int tapeVariableNumber;
+        List<String> stateNames;
+        List<String> goalStateNames;
+        List<TuringState> states = new ArrayList<>();
+        String acceptState;
+        String rejectState;
+        String startState;
+        String blankSymbol;
+        Controller controller = new Controller();
+        List<String> tapeAlphabet;
+        List<String> inputAlphabet;
+
+        try {
+            File myObj = new File("input.txt");
+            FileWriter myWriter = new FileWriter("output.txt");
+            Scanner myReader = new Scanner(myObj);
+            variableNumber = Integer.parseInt(myReader.nextLine());
+            tapeVariableNumber = Integer.parseInt(myReader.nextLine());
+            stateNumber = Integer.parseInt(myReader.nextLine());
+            stateNames = Arrays.asList(myReader.nextLine().split(" "));
+            for (String stateName : stateNames)
+                states.add(new TuringState(stateName));
+            startState = myReader.nextLine();
+            acceptState = myReader.nextLine();
+            rejectState = myReader.nextLine();
+            blankSymbol = myReader.nextLine();
+            tapeAlphabet  = Arrays.asList(myReader.nextLine().split(" "));
+            controller.tapeAlphabet.addAll(tapeAlphabet);
+            inputAlphabet  = Arrays.asList(myReader.nextLine().split(" "));
+            controller.inputAlphabet.addAll(inputAlphabet);
+            for (int i = 0; i < (stateNumber-2) * (variableNumber+tapeVariableNumber); i++) {
+                String[] transactions = myReader.nextLine().split(" ");
+                for (TuringState state : states) {
+                    if (state.stateName.equals(transactions[0]))
+                        state.addTransaction(new TuringStateProps(transactions[1].charAt(0), transactions[2].charAt(0), transactions[3].charAt(0), states.get(stateNames.indexOf(transactions[4]))));
+                }
+            }
+
+            TuringState iterate = states.get(0);
+
+            for(TuringState state : states){
+                if(state.stateName.equals(acceptState))
+                    controller.acceptState = state;
+                else if(state.stateName.equals(rejectState))
+                    controller.rejectState = state;
+                else if(state.stateName.equals(startState))
+                    iterate = state;
+            }
+
+
+            while (myReader.hasNextLine()) {
+
+                String line = myReader.nextLine();
+                for(var i =0;i<line.length();i++)
+                {
+                    controller.inputTape.tapeVariables.add(line.charAt(i));
+                }
+
+                controller.inputTape.tapeVariables.add(blankSymbol.charAt(0));
+
+//                System.out.println(iterate.stateName);
+//                for (TuringStateProps transaction : iterate.transactions) {
+//                    System.out.println(transaction);
+//                }
+                System.out.println(line);
+                System.out.println(controller.findTransaction(iterate));
+
+
+
+            }
+            myWriter.close();
+            myReader.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     public static void main (String args[]) {
-        Homework2();
+        Homework1();
     }
 }
