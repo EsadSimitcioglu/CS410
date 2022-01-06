@@ -1,20 +1,19 @@
 package Homework2;
 
-import javax.sound.midi.Soundbank;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Path {
+public class PDAPath {
 
-    public StateStack iterate;
+    public PDAState iterate;
     public Stack stack;
     public List<String> road;
     public char initialStackSymbol;
     public boolean isValid = false;
 
-    public Path innerPath;
+    public PDAPath innerPath;
 
-    public Path(StateStack iterate, Stack stack,String initialStackSymbol) {
+    public PDAPath(PDAState iterate, Stack stack, String initialStackSymbol) {
         this.iterate = iterate;
         this.stack = stack;
         this.initialStackSymbol = initialStackSymbol.charAt(0);
@@ -38,9 +37,16 @@ public class Path {
             Stack prevStack = new Stack(stack.initialVariable);
             prevStack.stack.addAll(stack.stack);
 
-            for (StateStackProps transaction : this.iterate.transactions) {
+            System.out.println(iterate.stateName);
+            System.out.println(iterate.transactions);
+
+            for (PDAStateProps transaction : this.iterate.transactions) {
+                System.out.println(input.charAt(i) + " | " + transaction);
                 if ((input.charAt(i) == transaction.variable || transaction.variable == 'ε') ) {
                     isProcess = true;
+
+                    System.out.println(input.charAt(i) + " | " + transaction);
+
 
                     if(input.charAt(i) == transaction.variable)
                         variable_counter++;
@@ -48,7 +54,7 @@ public class Path {
                         epsilon_counter++;
 
                     if (variable_counter >= 2 || epsilon_counter >= 2) {
-                        this.innerPath = new Path(iterate, prevStack, Character.toString(initialStackSymbol));
+                        this.innerPath = new PDAPath(iterate, prevStack, Character.toString(initialStackSymbol));
                         this.innerPath.road.remove(0);
                         this.innerPath.road.addAll(road.subList(0,road.size()-1));
                         if((transaction.pop != innerPath.initialStackSymbol && innerPath.stack.pop(transaction.pop))){
@@ -56,18 +62,10 @@ public class Path {
                             this.innerPath.findPath(input.substring(i+1));
                         }
                     }
-                    else if (transaction.variable == 'ε' && transaction.pop == 'ε' && transaction.push == 'ε' && iterate.equals(transaction.nextState))
-                     {
-                        this.iterate.transactions.remove(transaction);
-                        this.findTransaction(input);
-                    }
-                    else if(transaction.variable == 'ε' && transaction.pop == 'ε' && transaction.push == 'ε' && !iterate.equals(transaction.nextState)){
-                        stack.push(transaction.push);
-                        stack.pop(transaction.pop);
+                    else if(transaction.variable == 'ε' && transaction.pop == 'ε' && transaction.push == 'ε'){
                         this.iterate = transaction.nextState;
                         this.road.add(this.iterate.stateName);
                         this.isValid = true;
-                        this.findTransaction(input);
                     }
                     else if((transaction.pop != this.initialStackSymbol && this.stack.pop(transaction.pop))){
                         this.stack.push(transaction.push);
@@ -79,13 +77,14 @@ public class Path {
                 }
             }
             if(!isProcess) {
-                isValid = false;
                 return;
             }
         }
     }
+
+
     public void startAndEndTransaction() {
-        for (StateStackProps transaction : iterate.transactions) {
+        for (PDAStateProps transaction : iterate.transactions) {
             if (transaction.variable == 'ε' &&  (transaction.pop == initialStackSymbol || transaction.push == initialStackSymbol) && this.stack.pop(transaction.pop)) {
                 stack.push(transaction.push);
                 iterate = transaction.nextState;
@@ -96,7 +95,7 @@ public class Path {
 
     @Override
     public String toString() {
-        return "Path{" +
+        return "PDAPath{" +
                 "iterate=" + iterate +
                 ", stack=" + stack +
                 ", road=" + road +

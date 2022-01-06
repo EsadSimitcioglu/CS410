@@ -1,9 +1,11 @@
+package Homework1;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class State {
 
-    String stateName;
+    public String stateName;
     List<StateProps> transactions;
 
     public State(String stateName) {

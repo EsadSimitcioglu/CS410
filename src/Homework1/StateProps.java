@@ -1,3 +1,5 @@
+package Homework1;
+
 public class StateProps {
 
     public char variable;

@@ -1,13 +1,13 @@
 package Homework2;
 
-public class StateStackProps {
+public class PDAStateProps {
 
     public char variable;
-    public StateStack nextState;
+    public PDAState nextState;
     public char pop;
     public char push;
 
-    public StateStackProps(String variable, StateStack nextState, char pop, char push) {
+    public PDAStateProps(String variable, PDAState nextState, char pop, char push) {
         this.variable = variable.charAt(0);
         this.nextState = nextState;
         this.pop = pop;
@@ -16,7 +16,7 @@ public class StateStackProps {
 
     @Override
     public String toString() {
-        return "StateStackProps{" +
+        return "PDAStateProps{" +
                 "variable=" + variable +
                 ", nextState=" + nextState.stateName +
                 ", pop=" + pop +
