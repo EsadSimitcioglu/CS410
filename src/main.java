@@ -238,15 +238,10 @@ public class main {
                 }
 
                 controller.inputTape.tapeVariables.add(blankSymbol.charAt(0));
+                controller.inputTape.tapeVariables.add(blankSymbol.charAt(0));
 
-//                System.out.println(iterate.stateName);
-//                for (TuringStateProps transaction : iterate.transactions) {
-//                    System.out.println(transaction);
-//                }
                 System.out.println(line);
-                System.out.println(controller.findTransaction(iterate));
-
-
+                System.out.println(controller.path + " | " +  controller.findTransaction(iterate));
 
             }
             myWriter.close();
@@ -260,6 +255,6 @@ public class main {
 
 
     public static void main (String args[]) {
-        Homework1();
+        Homework3();
     }
 }
