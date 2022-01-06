@@ -1,7 +1,9 @@
-import Homework2.Path;
+import Homework1.State;
+import Homework1.StateProps;
+import Homework2.PDAPath;
+import Homework2.PDAState;
+import Homework2.PDAStateProps;
 import Homework2.Stack;
-import Homework2.StateStack;
-import Homework2.StateStackProps;
 import Homework3.Controller;
 import Homework3.TuringState;
 import Homework3.TuringStateProps;
@@ -75,11 +77,11 @@ public class main {
         List<String> stateNames;
         String startState;
         List<String> goalStateNames;
-        List<StateStack> states = new ArrayList<>();
+        List<PDAState> states = new ArrayList<>();
         List<String> stackVariable = new ArrayList<>();
         String initialStackSymbol;
         List<String> inputs = new ArrayList<>();
-        List<Path> paths = new ArrayList<>();
+        List<PDAPath> paths = new ArrayList<>();
 
         try {
             File myObj = new File("input.txt");
@@ -92,7 +94,7 @@ public class main {
 
             stateNames = Arrays.asList(myReader.nextLine().split(" "));
             for (String stateName : stateNames)
-                states.add(new StateStack(stateName));
+                states.add(new PDAState(stateName));
 
             startState = myReader.nextLine();
 
@@ -105,21 +107,21 @@ public class main {
                 String line = myReader.nextLine();
                 String[] transactions = line.split(" ");
                 if(transactions.length > 1){
-                    for (StateStack state : states) {
+                    for (PDAState state : states) {
                         if (state.stateName.equals(transactions[0]))
-                            state.addTransaction(new StateStackProps(transactions[1], states.get(stateNames.indexOf(transactions[4])), transactions[2].charAt(0) , transactions[3].charAt(0)));
+                            state.addTransaction(new PDAStateProps(transactions[1], states.get(stateNames.indexOf(transactions[4])), transactions[2].charAt(0) , transactions[3].charAt(0)));
                     }
                 }
                 else {
 
                     myWriter.write("New Input\n");
 
-                    StateStack iterate = states.get(stateNames.indexOf(startState));
+                    PDAState iterate = states.get(stateNames.indexOf(startState));
                     Stack stack = new Stack(initialStackSymbol);
-                    paths.add(new Path(iterate,stack,initialStackSymbol));
+                    paths.add(new PDAPath(iterate,stack,initialStackSymbol));
                     paths.get(paths.size()-1).findPath(line);
 
-                    Path path = paths.get(paths.size()-1);
+                    PDAPath path = paths.get(paths.size()-1);
 
                     for(String stop : path.road) {
                         myWriter.write(stop + "\t");
@@ -141,9 +143,9 @@ public class main {
                 }
             }
 
-            for(StateStack state : states){
+            for(PDAState state : states){
                 System.out.println(state.stateName + " ");
-                for(StateStackProps props : state.transactions)
+                for(PDAStateProps props : state.transactions)
                     System.out.println(props);
             }
 
@@ -155,7 +157,7 @@ public class main {
         }
     }
 
-    public static void possbilePaths(Path p, FileWriter myWriter,List<String> goalStateNames) {
+    public static void possbilePaths(PDAPath p, FileWriter myWriter,List<String> goalStateNames) {
         try{
             if(p.innerPath != null){
                 myWriter.write("\n");
